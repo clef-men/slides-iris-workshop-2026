@@ -256,13 +256,13 @@
     \infer[snapshot-get]{
       \model\ \zooProph\ \iGname\ \v{pasts}\ \v{prophss}
     }{
-      \snapshot\ \iGname\ (\v{pasts}\ \key)\ (\v{prophss}\ \key)
+      \snapshot\ \iGname\ \key\ (\v{pasts}\ \key)\ (\v{prophss}\ \key)
     }
   \and
     \infer[snapshot-valid]{
         \model\ \zooProph\ \iGname\ \v{pasts}\ \v{prophss}
       \\
-        \snapshot\ \iGname\ \key\ (\v{pasts}\ \key)\ (\v{prophss}\ \key)
+        \snapshot\ \iGname\ \key\ \v{past}\ \v{prophs}
     }{
       \Exists \v{past'}.
       \v{pasts}\ \key = \v{past} \dplus \v{past'} \iSep
