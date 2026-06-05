@@ -1,0 +1,125 @@
+\section{\Parabs : A Verified Realistic Parallel Scheduler}
+
+\begin{frame}{Overview}
+\centering
+\input{figures/parabs}
+\end{frame}
+
+\begin{frame}{Verification}
+\centering
+\Large
+\begin{tabular}{c@{\hskip3em}c@{\hskip3em}c}
+    \includegraphics[scale=.7]{images/iris.pdf}
+  &
+    \textcolor{color1}{\fontsize{40}{0}\selectfont Zoo}
+  &
+    \includegraphics[scale=.24]{images/rocq.png}
+\end{tabular}
+\vfill
+\textbf{\Parabs has been fully verified using the \Zoo framework}
+
+(assuming sequential consistency).
+\end{frame}
+
+\begin{frame}{Futures}
+\def\consumer{%
+  \l{\textcolor{color1}{consumer}}%
+}
+\def\inv{%
+  \l{\textcolor{color2}{inv}}%
+}
+\def\result{%
+  \l{\textcolor{color3}{result}}%
+}
+\only<1>{
+  \small
+  \begin{mathparpagebreakable}
+      \iSpec[
+        lab=async-spec
+      ]{
+        \l{pool.context}\ \v{pool}\ \v{ctx}\ \v{scope} \iSep \\
+        \begin{inboxIndent}
+          \Forall \v{ctx}\ \v{scope}. \\
+          \l{pool.context}\ \v{pool}\ \v{ctx}\ \v{scope} \iWand \\
+          \iWpVertical{
+            \v{task}\ \v{ctx}
+          }[
+            \zooVal
+          ]{
+            \l{pool.context}\ \v{pool}\ \v{ctx}\ \v{scope} \iSep \\
+            \iLater \iPredTwo\ \zooVal \iSep \\
+            \iLater \iPersistently \iPredFour\ \zooVal
+          }
+        \end{inboxIndent}
+      }{
+        \c{async}\ \v{ctx}\ \v{task}
+      }[
+        t
+      ]{
+        \l{pool.context}\ \v{pool}\ \v{ctx}\ \v{scope} \iSep \\
+        \inv\ \v{pool}\ t\ \iPredTwo\ \iPredFour \iSep \\
+        \consumer\ t\ \iPredTwo
+      }
+    \and
+      \iSpec[
+        lab=wait-spec
+      ]{
+        \l{pool.context}\ \v{pool}\ \v{ctx}\ \v{scope} \iSep \\
+        \inv\ \v{pool}\ t\ \iPredTwo\ \iPredFour
+      }{
+        \c{wait}\ \v{ctx}\ t
+      }[
+        \zooVal
+      ]{
+        \iCredit{2} \iSep \\
+        \l{pool.context}\ \v{pool}\ \v{ctx}\ \v{scope} \iSep \\
+        \result\ t\ \zooVal
+      }
+  \end{mathparpagebreakable}
+}
+\only<2>{
+  \begin{mathparpagebreakable}
+      \infer[consumer-divide]{
+          \inv\ \v{pool}\ t\ \iPredTwo\ \iPredFour
+        \\\\
+          \consumer\ t\ \left( \Lambda \zooVal. \iBigSep_{\iPredThree \in \iPredThree{}s}
+            \iPredThree\ \zooVal \right)
+      }{
+        \iFupd
+        \iBigSep_{\iPredThree \in \iPredThree{}s}
+          \consumer\ t\ \iPredThree
+      }
+    \and
+      \infer[inv-result-consumer]{
+          \inv\ \v{pool}\ t\ \iPredTwo\ \iPredFour
+        \\\\
+          \result\ t\ \zooVal
+        \\\\
+          \consumer\ t\ \iPredThree
+      }{
+        \iFupd
+        \iLater[2] \iPredThree\ \zooVal
+      }
+    \and
+      \infer[inv-result]{
+          \inv\ \v{pool}\ t\ \iPredTwo\ \iPredFour
+        \\\\
+          \result\ t\ \zooVal
+      }{
+        \iFupd
+        \iLater \iPersistently \iPredFour\ \zooVal
+      }
+  \end{mathparpagebreakable}
+}
+\end{frame}
+
+\begin{frame}{Benchmarks}
+\centering
+\large
+\input{figures/parabs_benchmarks}
+\vfill
+{
+  \bfseries
+  \Parabs has equal or better performance than \Domainslib.
+}
+\end{frame}
