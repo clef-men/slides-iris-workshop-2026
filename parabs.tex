@@ -41,7 +41,7 @@
         \begin{inboxIndent}
           \Forall \v{ctx}\ \v{scope}. \\
           \l{pool.context}\ \v{pool}\ \v{ctx}\ \v{scope} \iWand \\
-          \iWpVertical{
+          \iWp{
             \v{task}\ \v{ctx}
           }[
             \zooVal
@@ -61,6 +61,20 @@
         \consumer\ t\ \iPredTwo
       }
     \and
+      \infer[consumer-divide]{
+          \inv\ \v{pool}\ t\ \iPredTwo\ \iPredFour
+        \\\\
+          \consumer\ t\ \left( \Lambda \zooVal. \iBigSep_{\iPredThree \in \iPredThree{}s}
+            \iPredThree\ \zooVal \right)
+      }{
+        \iFupd
+        \iBigSep_{\iPredThree \in \iPredThree{}s}
+          \consumer\ t\ \iPredThree
+      }
+  \end{mathparpagebreakable}
+}
+\only<2>{
+  \begin{mathparpagebreakable}
       \iSpec[
         lab=wait-spec
       ]{
@@ -74,20 +88,6 @@
         \iCredit{2} \iSep \\
         \l{pool.context}\ \v{pool}\ \v{ctx}\ \v{scope} \iSep \\
         \result\ t\ \zooVal
-      }
-  \end{mathparpagebreakable}
-}
-\only<2>{
-  \begin{mathparpagebreakable}
-      \infer[consumer-divide]{
-          \inv\ \v{pool}\ t\ \iPredTwo\ \iPredFour
-        \\\\
-          \consumer\ t\ \left( \Lambda \zooVal. \iBigSep_{\iPredThree \in \iPredThree{}s}
-            \iPredThree\ \zooVal \right)
-      }{
-        \iFupd
-        \iBigSep_{\iPredThree \in \iPredThree{}s}
-          \consumer\ t\ \iPredThree
       }
     \and
       \infer[inv-result-consumer]{
