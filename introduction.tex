@@ -32,9 +32,11 @@ let rec fibonacci n =
 \end{ocamlcode}
 \begin{overbox}<2>
   \Large
-  \textbf{This implementation does \emph{not} scale} because it spawns too many domains --- potentially many more than the number of available cores.
-  \\\\
-  Not only does performance rapidly degrade but \OCamlFive also has a limit on the number of active domains.
+  \textbf{This implementation is \emph{wrong}:}
+  \begin{itemize}
+    \item the number of active domains is limited;
+    \item performance collapses when spawning more domains than available cores.
+  \end{itemize}
 \end{overbox}
 \end{frame}
 
